@@ -33,6 +33,8 @@ export interface WatchedItem {
   watchedProgressSeconds?: number | null;
   /** TV only: watched episodes, key "S1E5" = true */
   watchedEpisodes?: Record<string, boolean>;
+  /** Origin country codes, e.g. "KR" for Korean */
+  originCountry?: string;
 }
 
 export interface TMDBMovieResult {

@@ -83,6 +83,7 @@ export default function ContentDetailPage() {
       rating: form.existingItem?.rating ?? form.rating,
       isFavorite: form.existingItem?.isFavorite ?? form.isFavorite,
       runtime: detail.runtime ?? form.existingItem?.runtime ?? null,
+      originCountry: detail.originCountry?.join(",") || undefined,
       watchingStatus: "dropped",
       ...(detail.type === "movie" &&
         progressSec != null &&
@@ -156,6 +157,7 @@ export default function ContentDetailPage() {
         rating: form.rating,
         isFavorite: form.isFavorite,
         runtime: detail.runtime ?? form.existingItem?.runtime ?? null,
+        originCountry: detail.originCountry?.join(",") || undefined,
         watchingStatus:
           detail.type === "tv"
             ? form.asDropped

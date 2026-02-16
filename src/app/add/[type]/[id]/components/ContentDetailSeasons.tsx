@@ -24,8 +24,13 @@ export function ContentDetailSeasons({
   onEpisodeToggle,
 }: ContentDetailSeasonsProps) {
   const seasonRefs = useRef<Record<number, HTMLDivElement | null>>({});
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     const [num] = Array.from(expandedSeasons);
     if (num != null && seasonRefs.current[num]) {
       seasonRefs.current[num]?.scrollIntoView({ behavior: "smooth", block: "start" });

@@ -11,6 +11,7 @@ export interface TMDBDetail {
   type: string;
   imdbId: string | null;
   trailerKey: string | null;
+  originCountry: string[];
 }
 
 export interface TVEpisode {

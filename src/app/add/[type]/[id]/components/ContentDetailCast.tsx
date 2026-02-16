@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { ScrollRow } from "@/components/ScrollRow";
 import type { CastMember } from "../types";
 
@@ -16,8 +17,12 @@ export function ContentDetailCast({ cast }: ContentDetailCastProps) {
       <h3 className="text-sm font-semibold mb-3">Oyuncular</h3>
       <ScrollRow>
         {cast.map((c) => (
-          <div key={c.id} className="flex-shrink-0 w-20 text-left">
-            <div className="aspect-[2/3] rounded-lg overflow-hidden bg-muted mb-1.5">
+          <Link
+            key={c.id}
+            href={`/person/${c.id}`}
+            className="flex-shrink-0 w-20 text-left group"
+          >
+            <div className="aspect-[2/3] rounded-lg overflow-hidden bg-muted mb-1.5 transition-transform group-hover:scale-[1.03]">
               {c.profilePath ? (
                 <Image
                   src={c.profilePath}
@@ -32,11 +37,11 @@ export function ContentDetailCast({ cast }: ContentDetailCastProps) {
                 </div>
               )}
             </div>
-            <p className="text-xs font-medium truncate">{c.name}</p>
+            <p className="text-xs font-medium truncate group-hover:text-primary transition-colors">{c.name}</p>
             {c.character && (
               <p className="text-[10px] text-muted-foreground truncate">{c.character}</p>
             )}
-          </div>
+          </Link>
         ))}
       </ScrollRow>
     </div>

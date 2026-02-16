@@ -17,10 +17,10 @@ function MyListContent() {
   const searchParams = useSearchParams();
   const typeParam = searchParams.get("type");
   const [listType, setListType] = useState<"movie" | "tv">(
-    typeParam === "tv" ? "tv" : "movie"
+    typeParam === "tv" ? "tv" : "movie",
   );
   const [filterType, setFilterType] = useState<
-    "all" | "movie" | "tv" | "favorites"
+    "all" | "movie" | "tv" | "favorites" | "korean"
   >("all");
   const { items, watchlist } = useWatch();
   const [tab, setTab] = useState<"watched" | "watchlist">("watched");
@@ -31,16 +31,21 @@ function MyListContent() {
     const matchSearch =
       !searchQuery ||
       item.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchType =
+      listType === "movie" ? item.type === "movie" : item.type === "tv";
     const matchFilter =
       filterType === "all"
-        ? (listType === "movie" ? item.type === "movie" : item.type === "tv")
+        ? matchType
         : filterType === "favorites"
-          ? item.isFavorite && (listType === "movie" ? item.type === "movie" : item.type === "tv")
-          : item.type === filterType;
+          ? item.isFavorite && matchType
+          : filterType === "korean"
+            ? matchType &&
+              (item.originCountry?.split(",").includes("KR") ?? false)
+            : item.type === filterType;
     return matchSearch && matchFilter;
   });
   const sorted = [...filtered].sort(
-    (a, b) => new Date(b.watchedAt).getTime() - new Date(a.watchedAt).getTime()
+    (a, b) => new Date(b.watchedAt).getTime() - new Date(a.watchedAt).getTime(),
   );
 
   const watchlistFiltered = watchlist.filter((item) => {
@@ -112,7 +117,9 @@ function MyListContent() {
                   size="sm"
                   onClick={() => setListType("movie")}
                   className={`min-w-[5rem] ${
-                    listType === "movie" ? "bg-amber-600 hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-400" : ""
+                    listType === "movie"
+                      ? "bg-amber-600 hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-400"
+                      : ""
                   }`}
                 >
                   <Film className="h-4 w-4" />
@@ -130,15 +137,35 @@ function MyListContent() {
                 <Button
                   variant={filterType === "favorites" ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setFilterType(filterType === "favorites" ? "all" : "favorites")}
+                  onClick={() =>
+                    setFilterType(
+                      filterType === "favorites" ? "all" : "favorites",
+                    )
+                  }
                   className={`min-w-[5rem] ${
-                    filterType === "favorites" ? "bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-400" : ""
+                    filterType === "favorites"
+                      ? "bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-400"
+                      : ""
                   }`}
                 >
                   <Heart
                     className={`h-4 w-4 ${filterType === "favorites" ? "fill-current" : ""}`}
                   />
                   Favoriler
+                </Button>
+                <Button
+                  variant={filterType === "korean" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() =>
+                    setFilterType(filterType === "korean" ? "all" : "korean")
+                  }
+                  className={` ${
+                    filterType === "korean"
+                      ? "bg-pink-600 hover:bg-pink-700 dark:bg-pink-500 dark:hover:bg-pink-400"
+                      : ""
+                  }`}
+                >
+                  🇰🇷 한국
                 </Button>
               </div>
             </div>
@@ -150,9 +177,9 @@ function MyListContent() {
                   : "Henüz dizi eklemedin."}
               </p>
             ) : (
-              <div className="flex flex-wrap gap-3">
+              <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-3 justify-items-center">
                 {sorted.map((item) => (
-                  <div key={item.id} className="shrink-0 w-[70px] sm:w-[80px]">
+                  <div key={item.id} className="w-[70px] sm:w-[80px]">
                     <WatchedCard item={item} compact rounded="sm" border />
                   </div>
                 ))}
@@ -174,26 +201,28 @@ function MyListContent() {
                 />
               </div>
               <div className="flex gap-2 flex-wrap">
-              <Button
-                variant={watchlistType === "movie" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setWatchlistType("movie")}
-                className={`min-w-[5rem] ${
-                  watchlistType === "movie" ? "bg-amber-600 hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-400" : ""
-                }`}
-              >
-                <Film className="h-4 w-4" />
-                Film
-              </Button>
-              <Button
-                variant={watchlistType === "tv" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setWatchlistType("tv")}
-                className={`min-w-[5rem] ${watchlistType === "tv" ? "bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-400" : ""}`}
-              >
-                <Tv className="h-4 w-4" />
-                Dizi
-              </Button>
+                <Button
+                  variant={watchlistType === "movie" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setWatchlistType("movie")}
+                  className={`min-w-[5rem] ${
+                    watchlistType === "movie"
+                      ? "bg-amber-600 hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-400"
+                      : ""
+                  }`}
+                >
+                  <Film className="h-4 w-4" />
+                  Film
+                </Button>
+                <Button
+                  variant={watchlistType === "tv" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setWatchlistType("tv")}
+                  className={`min-w-[5rem] ${watchlistType === "tv" ? "bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-400" : ""}`}
+                >
+                  <Tv className="h-4 w-4" />
+                  Dizi
+                </Button>
               </div>
             </div>
 
@@ -221,7 +250,13 @@ function MyListContent() {
 
 export default function MyListPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-muted-foreground">Yükleniyor...</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center text-muted-foreground">
+          Yükleniyor...
+        </div>
+      }
+    >
       <MyListContent />
     </Suspense>
   );

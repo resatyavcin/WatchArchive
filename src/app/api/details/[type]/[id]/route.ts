@@ -66,6 +66,7 @@ export async function GET(
         data.videos?.results?.find(
           (v: { site: string; type: string }) => v.site === "YouTube" && v.type === "Trailer"
         )?.key ?? null,
+      originCountry: data.origin_country || data.production_countries?.map((c: { iso_3166_1: string }) => c.iso_3166_1) || [],
     };
 
     return NextResponse.json(item);

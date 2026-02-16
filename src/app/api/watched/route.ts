@@ -14,6 +14,7 @@ function toDbRow(item: Record<string, unknown>) {
     watchingStatus: "watching_status",
     watchedProgressSeconds: "watched_progress_seconds",
     watchedEpisodes: "watched_episodes",
+    originCountry: "origin_country",
   };
   for (const [k, v] of Object.entries(item)) {
     if (v === undefined) continue;
@@ -34,6 +35,7 @@ function toItem(row: Record<string, unknown>) {
     watching_status: "watchingStatus",
     watched_progress_seconds: "watchedProgressSeconds",
     watched_episodes: "watchedEpisodes",
+    origin_country: "originCountry",
   };
   const item: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(row)) {
